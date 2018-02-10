@@ -1,16 +1,16 @@
 class Block {
-    /* TODO
-    Index: number
-    Transactions: Transaction[]
-    Difficulty: number
-    PrevBlockHash: hex_number
-    MinedBy: address
-    BlockDataHash: address
-
-    BlockHash: hex_number
-    Nonce: number
-    DateCreated: timestamp
-    */
+    constructor(index, transactions, difficulty, prevBlockHash, minedBy, blockDataHash, blockHash, nonce, dateCreated){
+        this.index = index; // number
+        this.transactions = transactions; // []
+        this.difficulty = difficulty; // number
+        this.prevBlockHash = prevBlockHash; // hash
+        this.minedBy = minedBy; // address
+        this.blockDataHash = blockDataHash; // hash
+        
+        this.nonce = nonce; //number
+        this.dateCreated = dateCreated; //date
+        this.blockHash = blockHash; // hash
+    }
 }
 
 module.exports = Block;
