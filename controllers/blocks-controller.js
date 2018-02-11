@@ -1,14 +1,31 @@
+const Node = require("../index");
+
 module.exports = {
     getAllBlocks: (req, res) => {
-        res.send("GET All Blocks");
-        // TODO
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(Node.blocks));
     },
     getBlockByIndex: (req, res) => {
-        res.send("GET block by index");
-        // TODO
+        const index = Number(req.params.index);
+        const blocks = Node.blocks;
+
+        if (index >= 0 && index < blocks.length) {
+            res.setHeader('Content-Type', 'application/json');
+            res.send(JSON.stringify(blocks[index]));
+        }
+        else {
+            res.setHeader('Content-Type', 'application/json');
+            res.send(JSON.stringify({ "Error": "Invalid block index" }));
+        }
     },
     postNotifyBlock: (req, res) => {
-        res.send("POST notify");
-        // TODO
+        let blockIndex = req.body.index;
+
+        if(blockIndex > Node.blocks.length){
+            // TODO request full blockchain and check if its valid
+        }
+        
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify({"message": "Thank you"}));
     }
 }
