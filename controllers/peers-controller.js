@@ -15,6 +15,7 @@ module.exports = {
 
         if(urlValidator(peerUrl)) {
 
+            // TODO: could add funcitonality to check if 'peerName' is unique.
             var peerName = req.query.name;
 
             peer = new Peer(peerName,peerUrl);
