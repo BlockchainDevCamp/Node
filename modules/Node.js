@@ -1,5 +1,7 @@
 class Node {
-    constructor(peers, blocks, balnances, pendingTransactions, difficulty, miningJobs){
+    constructor(about, nodeName, peers, blocks, balnances, pendingTransactions, difficulty, miningJobs){
+        this.about = about;
+        this.nodeName  = nodeName;
         this.peers = peers; // []
         this.blocks = blocks; // []
         this.balnances = balnances; // map(address => number)
@@ -9,4 +11,4 @@ class Node {
     }
 }
 
-module.exports = Block;
+module.exports = Node;
