@@ -12,7 +12,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "1.18.2",
     "express": "4.16.2",
-    "body-parser": "1.18.2"
+    "ip-port-regex": "^2.0.0"
   }
 }
