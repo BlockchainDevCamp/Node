@@ -1,12 +1,12 @@
 const env = process.env.NODE_ENV || 'development';
-const BlockClass = require('./modules/Block');
-const NodeClass = require('./modules/Node');
+const Block = require('./modules/Block');
+const Node = require('./modules/Node');
 
-let BlockInstance = new BlockClass;
+let block = new Block;
 
-let Node = new NodeClass("SoftuinChain", "Alex", [], [BlockInstance.generageGenesisBlock()],new Map(), [], 6, new Map());
+let node = new Node("SoftuinChain", "Alex", [], [block.generageGenesisBlock()],new Map(), [], 6, new Map());
 
-module.exports = Node;
+module.exports = node;
 
 const config = require('./config/config')[env];
 const app = require('express')();

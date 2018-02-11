@@ -1,7 +1,7 @@
 class Node {
-    constructor(about, nodeName, peers, blocks, balnances, pendingTransactions, difficulty, miningJobs){
-        this.about = about;
-        this.nodeName  = nodeName;
+    constructor(about, name, peers, blocks, balnances, pendingTransactions, difficulty, miningJobs){
+        this.about = about; // string
+        this.name  = name; // string
         this.peers = peers; // []
         this.blocks = blocks; // []
         this.balnances = balnances; // map(address => number)
