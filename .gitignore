@@ -57,3 +57,8 @@ typings/
 # dotenv environment variables file
 .env
 
+# test output files
+test-results.xml
+
+# IDEA configuration files
+.idea/
