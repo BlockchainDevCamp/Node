@@ -1,4 +1,3 @@
-const node = require("../index");
 const hash = require('hash.js');
 
 function validateTransaction(transaction) {
@@ -10,7 +9,7 @@ function validateTransaction(transaction) {
     // check is signature is correct TODO
 
     // check if transaction hash is correct
-    if (!checkIfTransactionHashIsValid) {
+    if (calculateTransactionHash(transaction) !== transaction.transactionHash) {
         return false;
     }
 
@@ -23,7 +22,7 @@ function validateTransaction(transaction) {
     return true;
 
 
-    function checkIfTransactionHashIsValid(transaction) {
+    function calculateTransactionHash(transaction) {
 
         let transactionHash = hash(
             transaction.from,
@@ -36,12 +35,8 @@ function validateTransaction(transaction) {
             transaction.paid,
             transaction.fee
         );
-
-        if (transactionHash !== transaction.transactionHash){
-            return false;
-        }
-
-        return true;
+        
+        return transactionHash;
     }
 }
 
