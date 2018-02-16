@@ -4,6 +4,9 @@ class Node {
         this.name  = name; // string
         this.peers = peers; // []
         this.blocks = blocks; // []
+
+        this.pow = difficulty; 
+
         this.balnances = balnances; // map(address => number)
         this.pendingTransactions = pendingTransactions; // []
         this.difficulty = difficulty; // number

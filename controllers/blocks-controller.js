@@ -1,4 +1,8 @@
 const node = require("../index");
+const validateBlockChain = require("../util/validateBlockchain");
+const validateBlock = require("../util/validateBlock");
+const calculateBlockBalances = require("../util/calculateBlockBalances");
+const calculateBlockchainBalances = require("../util/calculateBlockchainBalances");
 
 module.exports = {
     getAllBlocks: (req, res) => {
@@ -20,12 +24,58 @@ module.exports = {
     },
     postNotifyBlock: (req, res) => {
         let blockIndex = req.body.index;
+        let lastBlock = node.blocks[node.blocks.length - 1]
 
-        if(blockIndex > node.blocks.length){
-            // TODO request full blockchain and check if its valid
+        if (blockIndex === lastBlock.index + 1) {
+            // TODO request their last block and check if its correct
+            let newBlock; // TODO request their last block
+
+            // check if block index === last block index + 1
+            if (newBlock.index !== lastBlock + 1) {
+                return false;
+            }
+
+            // check if prevblockhash is correct
+            if (newBlock.prevBlockHash !== lastBlock.blockHash) {
+                return false; // TODO request full blockchain ...
+            }
+
+            // check if block creation is greater then prev block creation
+            if (newBlock.dateCreated >= lastBlock.dateCreated) {
+                return false;
+            }
+
+            // validete block
+            if (!validateBlock(newBlock)) {
+                return false;
+            }
+
+            node.blocks.push(block);
+
+            calculateBlockBalances(block);
+
         }
-        
+        else if (blockIndex > lastBlock.index) {
+            let newBlockChain; // TODO request their full blockchain
+
+            let pow = validateBlockChain(newBlockChain);
+
+            if(pow === false){
+                return false;
+            }
+
+            if(pow <= node.pow){
+                return false;
+            }
+
+            node.blocks = newBlockChain;
+            node.balnances = new Map();
+            
+            // calculate node.balances
+            calculateBlockchainBalances();
+        }
+
         res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify({"message": "Thank you"}));
+        res.send(JSON.stringify({ "message": "Thank you" }));
     }
 }
