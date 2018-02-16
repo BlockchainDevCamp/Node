@@ -1,7 +1,7 @@
 const validateTransaction = require("./validateTransaction");
 
 function validateAllTransactionsInBlock(block) {
-    for(let transaction of block.transactions){
+    for(const transaction of block.transactions){
         
         if (transaction.minedInBlockIndex !== block.index) {
             return false;
