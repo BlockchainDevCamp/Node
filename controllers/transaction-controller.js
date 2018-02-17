@@ -46,12 +46,13 @@ module.exports = {
             }
         }
 
+        let confirmationNumber = blocks.length - firstTranBlock;
         let confirmedBalance = 0;
         let lastMinedBalance = 0;
         for (var i = currentBlock; i < blocks.length; i++) {
             let transactions = blocks[i].transactions;
             for (var t = 0; t < transactions.length; t++) {
-                if (transactions[i].transactionHash === tranHash) {
+                if (transactions[i].transactionHash === tranHash && confirmationNumber >= confirmationNum) {
                     confirmedBalance += transactions[i].value;
                     lastMinedBalance = transactions[i].value;
                 }
@@ -71,7 +72,7 @@ module.exports = {
         if (tranExists) {
             let tran = {
                 "address": tranHash,
-                "confirmedBalance": {"confirmations": blocks.length - firstTranBlock, "balance": confirmedBalance},
+                "confirmedBalance": {"confirmations": confirmationNumber, "balance": confirmedBalance},
                 "lastMinedBalance": {"confirmations": 1, "balance": lastMinedBalance},
                 "pendingBalance": {"confirmations": 0, "balance": pendingBalance}
 
