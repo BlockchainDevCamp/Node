@@ -15,4 +15,4 @@ function validateAllTransactionsInBlock(block) {
     return true;
 }
 
-module.exports = validateAllTransactions;
+module.exports = validateAllTransactionsInBlock;
