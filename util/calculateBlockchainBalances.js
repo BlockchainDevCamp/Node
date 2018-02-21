@@ -1,9 +1,9 @@
 const node = require("../index");
-const updateBalancesWithNewBlock = require("./calculateBlockBalances");
+const calculateBlockBalances = require("./calculateBlockBalances");
 
 function calculateBlockchainBalances() {
     for(const block of node.blocks){
-        updateBalancesWithNewBlock(block);
+        calculateBlockBalances(block);
     }
 }
 

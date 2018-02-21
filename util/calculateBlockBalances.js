@@ -1,6 +1,6 @@
 const node = require("../index");
 
-function updateBalancesWithNewBlock(block) {
+function calculateBlockBalances(block) {
 
     for (const transaction of block.transactions) {
         if (transactions.pain === true) {
@@ -12,4 +12,4 @@ function updateBalancesWithNewBlock(block) {
 
 }
 
-module.exports = updateBalancesWithNewBlock;
+module.exports = calculateBlockBalances;

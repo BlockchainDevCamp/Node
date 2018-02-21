@@ -1,13 +1,13 @@
 const validateBlock = require("./validateBlock");
 
 function validateBlockchain(blockchain) {
-    let proofOfWork = 0;
+    let proofOfWork = 0; 
 
     for(const block of blockchain){
         let previousBlock = blockchain[block.index - 1];
 
         // check if block index === last block index + 1
-        if(block.index !== previousBlock + 1){
+        if(block.index !== previousBlock.index + 1){
             return false;
         }
 
