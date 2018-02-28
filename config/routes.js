@@ -9,7 +9,7 @@ module.exports = app => {
         controllers.transactionController.validateTransactionRequest,
         controllers.transactionController.createTransaction]
     );
-    app.get('/balance/:transactionHash/confirmations/:confirmationNum', controllers.mainController.getBalance)
+    app.get('/balance/:address/confirmations/:confirmationNum', controllers.mainController.getBalance)
     app.get('/blocks', controllers.blockController.getAllBlocks);
     app.get('/blocks/:index', controllers.blockController.getBlockByIndex);
     app.post('/blocks/notify', controllers.blockController.postNotifyBlock);

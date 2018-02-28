@@ -18,7 +18,16 @@ module.exports = {
     },
 
     getBalance: (req, res) => {
-        res.send("GET Balance");
-        // TODO
+        let address = req.body.address;
+        let confirmationNum = req.body.confirmationNum;
+        let txBalance = node.balnances[address];
+
+        let obj = {
+            "address": address,
+            "confirmedBalance": { "confirmations": confirmationNum, "balance": txBalance }
+        }
+
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(obj));
     },
 };
