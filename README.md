@@ -24,6 +24,7 @@ where `<ENVIRONMENT_NAME>` should be the value of the corresponding environment 
 
 #### Request
 ```
+POST /transactions
 {
     "from": "c3293572dbe6ebc60de4a20ed0e21446cae66b17",
     "to": "f51362b7351ef62253a227a77751ad9b2302f911",
