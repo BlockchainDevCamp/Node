@@ -6,27 +6,35 @@ const Peer = require('../modules/Peer');
 module.exports = {
     getPeers: (req, res) => {
         res.setHeader('Content-Type', 'application/json');
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         res.send(JSON.stringify(Node.peers));
     },
     // post request with 2 parameters (name,url)
     postPeers: (req, res) => {
 
-    var peerUrl  = req.query.url;
+        var peerUrl = req.query.url;
 
-        if(urlValidator(peerUrl)) {
+        if (urlValidator(peerUrl)) {
 
             // TODO: could add funcitonality to check if 'peerName' and  'peerUrl' are unique per Node
             var peerName = req.query.name;
 
-            peer = new Peer(peerName,peerUrl);
+            peer = new Peer(peerName, peerUrl);
 
             Node.peers.push(peer);
             res.setHeader('Content-Type', 'application/json');
-            res.status(201).json({ message: 'Peer has been added',
-                                    peers: Node.peers} );
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            res.status(201).json({
+                message: 'Peer has been added',
+                peers: Node.peers
+            });
 
         } else {
             res.setHeader('Content-Type', 'application/json');
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             res.status(400).json({ error: 'Wrong IP format' });
         }
 
@@ -34,6 +42,6 @@ module.exports = {
 };
 
 // method for validating URL format
-function urlValidator (ip) {
-    return ipRegex({exact: true}).test(ip)
+function urlValidator(ip) {
+    return ipRegex({ exact: true }).test(ip)
 }

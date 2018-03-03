@@ -9,6 +9,8 @@ const request = require('request');
 module.exports = {
     getAllBlocks: (req, res) => {
         res.setHeader('Content-Type', 'application/json');
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         res.send(JSON.stringify(node.blocks));
     },
     getBlockByIndex: (req, res) => {
@@ -17,10 +19,14 @@ module.exports = {
 
         if (index >= 0 && index < blocks.length) {
             res.setHeader('Content-Type', 'application/json');
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             res.send(JSON.stringify(blocks[index]));
         }
         else {
             res.setHeader('Content-Type', 'application/json');
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             res.send(JSON.stringify({ "Error": "Invalid block index" }));
         }
     },
@@ -49,7 +55,7 @@ module.exports = {
 
             // validete block
             let isBlockValid = await validateBlock(newBlock)
-            if (!isBlockValid) { 
+            if (!isBlockValid) {
                 return false;
             }
 
@@ -63,23 +69,25 @@ module.exports = {
 
             let pow = await validateBlockChain(newBlockChain);
 
-            if(pow === false){
+            if (pow === false) {
                 return false;
             }
 
-            if(pow <= node.pow){
+            if (pow <= node.pow) {
                 return false;
             }
 
             node.blocks = newBlockChain;
             node.balnances = new Map();
             node.pendingTransactions = [];
-            
+
             // calculate node.balances
             calculateBlockchainBalances();
         }
 
         res.setHeader('Content-Type', 'application/json');
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         res.send(JSON.stringify({ "message": "Thank you" }));
     }
 }

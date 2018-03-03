@@ -27,10 +27,14 @@ module.exports = {
 
         if (tranExists) {
             res.setHeader('Content-Type', 'application/json');
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             res.send(JSON.stringify(transaction));
         }
         else {
             res.setHeader('Content-Type', 'application/json');
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             res.send(JSON.stringify({ "Error": "Invalid transaction hash" }));
         }
     },
@@ -68,7 +72,7 @@ module.exports = {
         }
 
         let pendingBalance = 0;
-        for(var i = 0; i < blocks.pendingTransactions.length; i++) {
+        for (var i = 0; i < blocks.pendingTransactions.length; i++) {
             let transactions = blocks[i].pendingTransactions;
             for (var t = 0; t < transactions.length; t++) {
                 if (transactions[i].transactionHash === tranHash) {
@@ -80,16 +84,20 @@ module.exports = {
         if (tranExists) {
             let tran = {
                 "address": tranHash,
-                "confirmedBalance": {"confirmations": confirmationNumber, "balance": confirmedBalance},
-                "lastMinedBalance": {"confirmations": 1, "balance": lastMinedBalance},
-                "pendingBalance": {"confirmations": 0, "balance": pendingBalance}
+                "confirmedBalance": { "confirmations": confirmationNumber, "balance": confirmedBalance },
+                "lastMinedBalance": { "confirmations": 1, "balance": lastMinedBalance },
+                "pendingBalance": { "confirmations": 0, "balance": pendingBalance }
 
             };
             res.setHeader('Content-Type', 'application/json');
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             res.send(JSON.stringify(tran));
         }
         else {
             res.setHeader('Content-Type', 'application/json');
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             res.send(JSON.stringify({ "Error": "Invalid transaction hash" }));
         }
     },
@@ -114,6 +122,8 @@ module.exports = {
 
         response.status(201);
         response.set('Content-Type', 'application/json');
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         response.send(transactionHash);
     },
 
