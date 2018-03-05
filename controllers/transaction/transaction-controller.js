@@ -115,7 +115,7 @@ module.exports = {
         // 5. Puts the transaction in the "pending transactions" pool
         // 6. Sends the transaction to all peer nodes through the REST API
         //    - The transaction is sent from peer to peer until it reaches the entire network
-
+        node.pendingTransactions.push(transaction);
         // validate balance
         // TODO add new transaction to pending transactions pool
 
