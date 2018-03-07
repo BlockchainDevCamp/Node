@@ -14,10 +14,25 @@ const G = secp256k1Curve.g;
 
 class Crypto {
 
+    // 256-bit number / 64 hex digits
+    static createPrivateKey() {
+        // TODO: try to implement the generation of private key on your own
+        return secp256k1Curve.genKeyPair().priv.toString(16);
+    }
+
     static derivePublicKey(privateKeyString) {
 
         // point P = k * G
         return G.mul(privateKeyString);
+    }
+
+    static derivePublicKeyFromCompressedPublicKey(compressedPublicKey) {
+        let publicKeyXHex = compressedPublicKey.substring(0, compressedPublicKey.length - 1);
+        let odd = compressedPublicKey.substring(compressedPublicKey.length - 1);
+
+        let publicKeyPoint = secp256k1Curve.curve.pointFromX(publicKeyXHex, odd);
+
+        return secp256k1Curve.keyFromPublic(publicKeyPoint, 'hex');
     }
 
     // hex(publicKey.x) + compressed(publicKey.y)
@@ -70,7 +85,10 @@ class Crypto {
         return [transactionSignature.r, transactionSignature.s];
     }
 
-    // TODO validate transaction hash
+    static verifySignature(compressedPublicKey, payloadHash, existingSignature) {
+        let publicKey = Crypto.derivePublicKeyFromCompressedPublicKey(compressedPublicKey);
+        return publicKey.verify(payloadHash, existingSignature);
+    }
 }
 
 module.exports = Crypto;
