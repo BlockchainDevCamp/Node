@@ -3,7 +3,9 @@
 const node = require('../../index');
 
 const Transaction = require('./Transaction');
+const TransactionData = require('./TransactionData');
 const TransactionHash = require('./TransactionHash');
+const Crypto = require('../../modules/Crypto');
 
 const Node = require('../../modules/Node');
 
@@ -158,7 +160,16 @@ module.exports = {
         }
 
         // 4. Validates the transaction signature
-        // TODO validate the transaction signature
+        let transactionData = TransactionData.createTransactionData(request);
+        let transactionDataPayloadHash = Crypto.signSHA256(JSON.stringify(transactionData));
+        let transactionSignature = { r: transaction.senderSignature[0], s: transaction.senderSignature[1] };
+        let isTransactionValid = Crypto.verifySignature(transaction.senderPubKey, transactionDataPayloadHash, transactionSignature);
+        if (!isTransactionValid) {
+            response.status(400);
+            response.set('Content-Type', 'application/json');
+            response.send(JSON.stringify({"Error": "Compromised transaction."}));
+            return;
+        }
 
         // 2. Checks for collisions -> duplicated transactions are skipped
         let existingTransaction = node.pendingTransactions[transactionHash];
