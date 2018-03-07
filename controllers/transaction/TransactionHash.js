@@ -12,4 +12,4 @@ class TransactionHash {
     }
 }
 
-module.exports = TransactionHash
+module.exports = TransactionHash;
