@@ -8,6 +8,7 @@ const TransactionHash = require('./TransactionHash');
 const Crypto = require('../../modules/Crypto');
 
 const Node = require('../../modules/Node');
+const Request = require('request');
 
 function validateTransactionRequest(request) {
     let from = request.body["from"];
@@ -143,7 +144,8 @@ module.exports = {
         }
     },
 
-    createTransaction: (request, response) => {
+    createTransaction: async (request, response) => {
+        console.log(request.debug);
         let transaction = Transaction.loadTransaction(request);
 
         // 1. Calculates the transaction hash
@@ -162,7 +164,7 @@ module.exports = {
         // 4. Validates the transaction signature
         let transactionData = TransactionData.createTransactionData(request);
         let transactionDataPayloadHash = Crypto.signSHA256(JSON.stringify(transactionData));
-        let transactionSignature = { r: transaction.senderSignature[0], s: transaction.senderSignature[1] };
+        let transactionSignature = {r: transaction.senderSignature[0], s: transaction.senderSignature[1]};
         let isTransactionValid = Crypto.verifySignature(transaction.senderPubKey, transactionDataPayloadHash, transactionSignature);
         if (!isTransactionValid) {
             response.status(400);
@@ -194,27 +196,35 @@ module.exports = {
         // 5. Puts the transaction in the "pending transactions" pool
         node.pendingTransactions.push(transaction);
 
-        // 6. Sends the transaction to all peer nodes through the REST API
-        //    - The transaction is sent from peer to peer until it reaches the entire network
-        // for (let peerIndex = 0; peerIndex < node.peers.length; peerIndex++) {
-        //     // TODO send the transaction to all peer nodes
-        // }
-
         response.status(201);
         response.set('Content-Type', 'application/json');
         response.header("Access-Control-Allow-Origin", "*");
         response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         response.send(transactionHash);
-    },
 
-    validateTransactionRequest(request, response, next) {
-        try {
-            validateTransactionRequest(request);
-        } catch (err) {
-            next(err);
-            return;
+        // 6. Sends the transaction to all peer nodes through the REST API
+        //    - The transaction is sent from peer to peer until it reaches the entire network
+        for (let peerIndex = 0; peerIndex < node.peers.length; peerIndex++) {
+            let peer = node.peers[peerIndex];
+
+            let options = {
+                method: 'post',
+                body: transactionData,
+                json: true,
+                // TODO: move to configuration
+                url: peer.peerUrl + ":5555/transactions",
+            };
+
+            await Request(options, function (err, res, transactionHashBody) {
+                if (err) {
+                    console.error(err);
+                }
+                if (!transactionHashBody || !transactionHashBody.transactionHash
+                    || transactionHash.transactionHash !== transactionHashBody.transactionHash) {
+                    console.warn("Compromised transaction for peer: " + peer.name);
+                }
+            });
         }
-        next();
     }
 
 };

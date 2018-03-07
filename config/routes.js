@@ -5,10 +5,7 @@ module.exports = app => {
     app.get('/peers', controllers.peersController.getPeers);
     app.post('/peers', controllers.peersController.postPeers);
     app.get('/transactions/:transactionHash', controllers.transactionController.getTransaction);
-    app.post('/transactions', [
-        controllers.transactionController.validateTransactionRequest,
-        controllers.transactionController.createTransaction]
-    );
+    app.post('/transactions', controllers.transactionController.createTransaction);
     app.get('/balance/:address/confirmations/:confirmationNum', controllers.mainController.getBalance)
     app.get('/blocks', controllers.blockController.getAllBlocks);
     app.get('/blocks/:index', controllers.blockController.getBlockByIndex);
