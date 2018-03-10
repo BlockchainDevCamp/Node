@@ -3,8 +3,8 @@ const Block = require('./modules/Block');
 const Node = require('./modules/Node');
 
 let block = new Block;
-
-let node = new Node("SoftuinChain", "Alex", [], [block.generageGenesisBlock()],new Map(), [], 6, new Map());
+//TODO add fake pending transaction for testing
+let node = new Node("SoftuniChain", "Alex", [], [block.generageGenesisBlock()],new Map(), [], 6, new Map());
 
 module.exports = node;
 

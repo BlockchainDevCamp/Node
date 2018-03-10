@@ -2,14 +2,15 @@ const node = require('../index');
 const hash = require('hash.js');
 const Block = require('../modules/Block');
 const validateBlock = require('../util/validateBlock');
+const Crypto = require('../modules/Crypto');
 
 module.exports = {
     startMine: (req, res) => {
-        let minerAddres = req.body.address;
+        let minerAddres = req.params.address;
 
-        let lastBlock = node.blocks[node.blocks - 1];
+        let lastBlock = node.blocks[node.blocks.length - 1];
 
-        let blockDataHash = hash(lastBlock.index, node.pendingTransactions, node.difficulty, lastBlock.blockHash, minerAddres);
+        let blockDataHash = Crypto.signSHA256(lastBlock.index+node.pendingTransactions+node.difficulty+lastBlock.blockHash+minerAddres);
 
         node.miningJobs.set(minerAddres, {
             index: lastBlock.index,

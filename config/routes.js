@@ -10,7 +10,7 @@ module.exports = app => {
     app.get('/blocks', controllers.blockController.getAllBlocks);
     app.get('/blocks/:index', controllers.blockController.getBlockByIndex);
     app.post('/blocks/notify', controllers.blockController.postNotifyBlock);
-    app.post('/mine', controllers.mineContoller.startMine);
+    app.get('/mine/:address', controllers.mineContoller.startMine);
     app.post('/mine/submit/:blockNum', controllers.mineContoller.submitBlock);
     
     app.all('*', (req, res) => {
