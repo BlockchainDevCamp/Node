@@ -10,7 +10,15 @@ module.exports = {
 
         let lastBlock = node.blocks[node.blocks.length - 1];
 
-        let blockDataHash = Crypto.signSHA256(lastBlock.index+node.pendingTransactions+node.difficulty+lastBlock.blockHash+minerAddres);
+        let blockData = {
+            index: lastBlock.index,
+            transactions: node.pendingTransactions,
+            difficulty: node.difficulty,
+            prevBlockHash: lastBlock.blockHash,
+            minedBy: minerAddres
+        };
+
+        let blockDataHash = Crypto.signSHA256(blockData);
 
         node.miningJobs.set(minerAddres, {
             index: lastBlock.index,
