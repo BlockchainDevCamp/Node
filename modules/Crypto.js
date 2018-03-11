@@ -71,9 +71,13 @@ class Crypto {
         let transactionPayloadWithoutWhiteSpaces = transactionPayload.replace(/[\s]/g, "");
 
         // Transaction hash for signing (SHA-256)
-        let transactionPayloadHash = hash.sha256().update(utf8.encode(transactionPayloadWithoutWhiteSpaces)).digest('hex');
+       /* let transactionPayloadHash = hash.sha256().update(utf8.encode(transactionPayloadWithoutWhiteSpaces)).digest('hex');*/
 
-        return transactionPayloadHash;
+        return Crypto.getSHA256(transactionPayloadWithoutWhiteSpaces);
+    }
+
+    static getSHA256(string) {
+        return hash.sha256().update(utf8.encode(string)).digest('hex');
     }
 
     static createTransactionSignature(privateKeyStr, transactionPayloadHash) {

@@ -18,7 +18,7 @@ module.exports = {
             minedBy: minerAddres
         };
 
-        let blockDataHash = Crypto.signSHA256(blockData);
+        let blockDataHash = Crypto.getSHA256(blockData);
 
         node.miningJobs.set(minerAddres, {
             index: lastBlock.index,
