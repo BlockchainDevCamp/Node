@@ -13,14 +13,9 @@ function validateBlock(candidateBlock) {
         return false;
     }
 
-    let hashData = {
-        blockDataHash: blockDataHash,
-        nonce: nonce,
-        date: date
-    };
 
     // check if blockHash is correct
-    if(calculateBlockHash(hashData) !== candidateBlock.blockHash){
+    if(calculateBlockHash(blockDataHash,nonce,date) !== candidateBlock.blockHash){
         console.log("minerHash not correct!");
         console.log("+++++Nonce ---> " + candidateBlock.nonce);
         console.log(blockDataHash + "|" + nonce + "|" + date + "--> " + calculateBlockHash(blockDataHash,nonce,date));
@@ -29,7 +24,7 @@ function validateBlock(candidateBlock) {
     }
 
     // check if transactions are more then 50
-    if(block.transactions.length > 50){
+    if(candidateBlock.transactions.length > 50){
         return false;
     }
 
