@@ -76,8 +76,8 @@ class Crypto {
         return Crypto.getSHA256(transactionPayloadWithoutWhiteSpaces);
     }
 
-    static getSHA256(string) {
-        return hash.sha256().update(utf8.encode(string)).digest('hex');
+    static getSHA256(text) {
+        return hash.sha256().update(utf8.encode(text)).digest('hex');
     }
 
     static createTransactionSignature(privateKeyStr, transactionPayloadHash) {

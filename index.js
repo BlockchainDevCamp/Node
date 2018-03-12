@@ -4,7 +4,7 @@ const Node = require('./modules/Node');
 
 let block = new Block;
 //TODO add fake pending transaction for testing
-let node = new Node("SoftuniChain", "Alex", [], [block.generageGenesisBlock()],new Map(), [], 6, new Map());
+let node = new Node("SoftuniChain", "Alex", [], [block.generageGenesisBlock()],new Map(), [], 3, new Map());
 
 module.exports = node;
 

@@ -21,7 +21,7 @@ module.exports = {
         let blockDataHash = Crypto.getSHA256(blockData);
 
         node.miningJobs.set(minerAddres, {
-            index: lastBlock.index,
+            index: lastBlock.index + 1,
             transactions: node.pendingTransactions,
             difficulty: node.difficulty,
             prevBlockHash: lastBlock.blockHash,
@@ -29,7 +29,7 @@ module.exports = {
         });
 
         let responseObj = {
-            index: lastBlock.index,
+            index: lastBlock.index + 1,
             transactionsIncluded: node.pendingTransactions.length,
             expectedReward: 10,
             difficulty: node.difficulty,
@@ -42,45 +42,70 @@ module.exports = {
         res.send(JSON.stringify(responseObj));
     },
     submitBlock: async (req, res) => {
-        let index = req.body.index;
-        let nonce = req.body.nonce;
-        let dataCreated = req.body.dataCreated;
-        let blockHashMiner = req.body.blockHash;
-        let minerAddres = req.body.minerAddress;
+        try {
+            console.log('--Block Submited for Verification!--')
+            let index = req.body.index;
+            let nonce = req.body.nonce;
+            let dateCreated = req.body.dateCreated;
+            let blockHash = req.body.blockHashMiner;
+            let minerAddress = req.body.minerAddress;
+            let blockDataHash = req.body.blockDataHash;
 
-        let minerJob = node.miningJobs(minerAddres)
+            let minerJob = node.miningJobs.get(minerAddress);
 
-        let lastBlock = node.blocks[node.blocks - 1];
+            let lastBlock = node.blocks[node.blocks.length - 1];
 
-        let blockHash = hash(lastBlock.index, node.pendingTransactions.length, node.difficulty, minerJob.blockDataHash, nonce, dataCreated);
+            let candidateBlock = new Block(index, minerJob.transactions, minerJob.difficulty, minerJob.prevBlockHash,
+                minerAddress, blockDataHash, blockHash, nonce, dateCreated);
 
-        let isBlockValid = await validateBlock(newBlock);
+            console.log(candidateBlock);
 
+            // let blockHash = hash(lastBlock.index, node.pendingTransactions.length, node.difficulty, minerJob.blockDataHash, nonce, dateCreated);
 
-        if (blockHash.startsWith("0".repeat(node.difficulty)) && blockHash === blockHashMiner && index === node.blocks.length && blockHash === blockHashMiner && isBlockValid) {
-            let newBlock = new Block(index, minerJob.transactions, node.difficulty, lastBlock.blockHash, minerAddres, minerJob.blockDataHash, blockHash, nonce, dataCreated);
+            let isBlockValid = await validateBlock(candidateBlock);
 
-            node.blocks.push(newBlock);
+            if (isBlockValid) {
+                console.log('SUCCESSSS!!!!!');
 
-            let responseObj = {
-                "status": "accepted",
-                "message": "Block accepted, expected reward: 10 coins"
+            } else {
+                console.log('FAILLLLL!!');
             }
 
+            if (blockHash.startsWith("0".repeat(node.difficulty)) && blockHash === blockHashMiner && index === node.blocks.length && blockHash === blockHashMiner && isBlockValid) {
+                let newBlock = new Block(index, minerJob.transactions, node.difficulty, lastBlock.blockHash, minerAddress, minerJob.blockDataHash, blockHash, nonce, dateCreated);
+
+                node.blocks.push(newBlock);
+
+                let responseObj = {
+                    "status": "accepted",
+                    "message": "Block accepted, expected reward: 10 coins"
+                }
+
+                res.setHeader('Content-Type', 'application/json');
+                res.header("Access-Control-Allow-Origin", "*");
+                res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+                res.send(JSON.stringify(responseObj));
+                return;
+            }
+
+            let responseObj = {
+                "status": "error"
+            }
             res.setHeader('Content-Type', 'application/json');
             res.header("Access-Control-Allow-Origin", "*");
             res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             res.send(JSON.stringify(responseObj));
-            return;
-        }
 
-        let responseObj = {
-            "status": "error"
+        } catch (err) {
+            console.error(err);
+            let responseObj = {
+                "status": "error"
+            }
+            res.setHeader('Content-Type', 'application/json');
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            res.send(JSON.stringify(responseObj));
         }
-        res.setHeader('Content-Type', 'application/json');
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-        res.send(JSON.stringify(responseObj));
 
 
     }

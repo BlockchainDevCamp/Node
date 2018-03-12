@@ -11,7 +11,7 @@ module.exports = app => {
     app.get('/blocks/:index', controllers.blockController.getBlockByIndex);
     app.post('/blocks/notify', controllers.blockController.postNotifyBlock);
     app.get('/mine/:address', controllers.mineContoller.startMine);
-    app.post('/mine/submit/:blockNum', controllers.mineContoller.submitBlock);
+    app.post('/mine/submit', controllers.mineContoller.submitBlock);
     
     app.all('*', (req, res) => {
         res.status(404);
