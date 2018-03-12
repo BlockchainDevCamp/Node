@@ -23,7 +23,7 @@ function validateBlock(candidateBlock) {
     if(calculateBlockHash(hashData) !== candidateBlock.blockHash){
         console.log("minerHash not correct!");
         console.log("+++++Nonce ---> " + candidateBlock.nonce);
-        console.log(blockDataHash+nonce+date + "--> " + calculateBlockHash(blockDataHash,nonce,date));
+        console.log(blockDataHash + "|" + nonce + "|" + date + "--> " + calculateBlockHash(blockDataHash,nonce,date));
 
         return false;
     }
