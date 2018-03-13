@@ -28,10 +28,12 @@ function validateBlock(candidateBlock) {
         return false;
     }
 
-    // check if all transaction are valid
-    if(!validateAllTransactions(candidateBlock.transactions)){
-        console.log("transactions not valid");
-        return false
+    // check if all transaction are valid (if there is transactions at all)
+    if(candidateBlock.transactions.length > 0) {
+        if (!validateAllTransactions(candidateBlock.transactions)) {
+            console.log("transactions not valid");
+            return false
+        }
     }
 
     return true;

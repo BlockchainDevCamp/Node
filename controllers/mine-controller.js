@@ -71,7 +71,7 @@ module.exports = {
                 console.log('FAILLLLL!!');
             }
 
-            if (blockHash.startsWith("0".repeat(node.difficulty)) && blockHash === blockHashMiner && index === node.blocks.length && blockHash === blockHashMiner && isBlockValid) {
+            if (blockHash.startsWith("0".repeat(node.difficulty)) && index === node.blocks.length && isBlockValid) {
                 let newBlock = new Block(index, minerJob.transactions, node.difficulty, lastBlock.blockHash, minerAddress, minerJob.blockDataHash, blockHash, nonce, dateCreated);
 
                 node.blocks.push(newBlock);
