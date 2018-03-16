@@ -3,6 +3,7 @@
 const node = require('../../index');
 
 const Transaction = require('./Transaction');
+const Balance = require('../address/Balance');
 const TransactionData = require('./TransactionData');
 const TransactionHash = require('./TransactionHash');
 const Crypto = require('../../modules/Crypto');
@@ -81,71 +82,7 @@ module.exports = {
         }
     },
 
-    getBalance: (req, res) => {
-        const tranHash = req.params['transactionHash'];
-        const confirmationNum = req.params['confirmationNum'];
-        const blocks = node.blocks;
-
-        let tranExists = false;
-        let firstTranBlock;
-
-        for (var i = 0; i < blocks.length; i++) {
-            let transactions = blocks[i].transactions;
-            for (var t = 0; t < transactions.length; t++) {
-                if (transactions[i].transactionHash === tranHash) {
-                    firstTranBlock = true;
-                    currentBlock = blocks[i].index;
-                    break;
-                }
-            }
-        }
-
-        let confirmationNumber = blocks.length - firstTranBlock;
-        let confirmedBalance = 0;
-        let lastMinedBalance = 0;
-        for (var i = currentBlock; i < blocks.length; i++) {
-            let transactions = blocks[i].transactions;
-            for (var t = 0; t < transactions.length; t++) {
-                if (transactions[i].transactionHash === tranHash && confirmationNumber >= confirmationNum) {
-                    confirmedBalance += transactions[i].value;
-                    lastMinedBalance = transactions[i].value;
-                }
-            }
-        }
-
-        let pendingBalance = 0;
-        for (var i = 0; i < blocks.pendingTransactions.length; i++) {
-            let transactions = blocks[i].pendingTransactions;
-            for (var t = 0; t < transactions.length; t++) {
-                if (transactions[i].transactionHash === tranHash) {
-                    pendingBalance += transactions[i].value;
-                }
-            }
-        }
-
-        if (tranExists) {
-            let tran = {
-                "address": tranHash,
-                "confirmedBalance": { "confirmations": confirmationNumber, "balance": confirmedBalance },
-                "lastMinedBalance": { "confirmations": 1, "balance": lastMinedBalance },
-                "pendingBalance": { "confirmations": 0, "balance": pendingBalance }
-
-            };
-            res.setHeader('Content-Type', 'application/json');
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-            res.send(JSON.stringify(tran));
-        }
-        else {
-            res.setHeader('Content-Type', 'application/json');
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-            res.send(JSON.stringify({ "Error": "Invalid transaction hash" }));
-        }
-    },
-
     createTransaction: async (request, response) => {
-        console.log(request.debug);
         let transaction = Transaction.loadTransaction(request);
 
         // 1. Calculates the transaction hash
@@ -225,6 +162,101 @@ module.exports = {
                 }
             });
         }
+    },
+
+    getConfirmedTransaction: (request, response) => {
+        node.blocks = [
+            {
+                index: 0,
+                transactions: [
+                    {
+                        from: "ac51700449340e5400e13772741c94cc9c457799",
+                        to: "0a37ccb342861218ea8331fdf6e4a4a6521e3e55",
+                        value: 5,
+                        paid: true,
+                        minedInBlockIndex: 0
+                    },
+                    {
+                        from: "0a37ccb342861218ea8331fdf6e4a4a6521e3e55",
+                        to: "353c42f7ca9cfcc532e9f252ffd88fcf74af8efb",
+                        value: 10,
+                        paid: true,
+                        minedInBlockIndex: 0
+                    },
+                    {
+                        from: "353c42f7ca9cfcc532e9f252ffd88fcf74af8efb",
+                        to: "ac51700449340e5400e13772741c94cc9c457799",
+                        value: 20,
+                        paid: true,
+                        minedInBlockIndex: 0
+                    }
+                ]
+            },
+            {
+                index: 1,
+                transactions: [
+                    {
+                        from: "0a37ccb342861218ea8331fdf6e4a4a6521e3e55",
+                        to: "ac51700449340e5400e13772741c94cc9c457799",
+                        value: 10,
+                        paid: true,
+                        minedInBlockIndex: 1
+                    },
+                    {
+                        from: "353c42f7ca9cfcc532e9f252ffd88fcf74af8efb",
+                        to: "ac51700449340e5400e13772741c94cc9c457799",
+                        value: 5,
+                        paid: false,
+                        minedInBlockIndex: 1
+                    }
+                ]
+            }
+        ];
+        node.pendingTransactions = [
+            {
+                from: "ac51700449340e5400e13772741c94cc9c457799",
+                to: "353c42f7ca9cfcc532e9f252ffd88fcf74af8efb",
+                value: 5
+            },
+            {
+                from: "0a37ccb342861218ea8331fdf6e4a4a6521e3e55",
+                to: "353c42f7ca9cfcc532e9f252ffd88fcf74af8efb",
+                value: 10
+            }
+        ];
+
+        const requestedConfirmationNumber = 2;
+        // TODO move out to a configuration file or command line parameter
+
+        const blocks = node.blocks;
+
+        let transactions = [];
+
+        // process confirmed confirmed balance
+        for (let blockIndex = 0; blockIndex < blocks.length; blockIndex++) {
+            let block = blocks[blockIndex];
+
+            for (let txIndex = 0; txIndex < block.transactions.length; txIndex++) {
+                let tx = block.transactions[txIndex];
+
+                if (tx.paid) {
+                    // confirmed balance
+                    if ((blocks.length - tx.minedInBlockIndex) >= requestedConfirmationNumber) {
+                        transactions.push(tx);
+                    }
+                }
+            }
+        }
+
+        let transactionsResult = {
+            address: address,
+            transactions: transactions
+        };
+
+        res.setHeader('Content-Type', 'application/json');
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.send(JSON.stringify(transactionsResult));
     }
 
 };
