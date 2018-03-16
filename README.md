@@ -19,7 +19,6 @@ where `<ENVIRONMENT_NAME>` should be the value of the corresponding environment 
 
 ## Publish Transaction
 
-
 ### Example 
 
 #### Request
@@ -48,5 +47,140 @@ The payload would be look in the following way:
 ```
 {
     "transactionHash": "b2e0d16602bf0a8e5a78b1d0133e535afe85638112b45cc511bbafc2a8279f34"
+}
+```
+
+## Retrieve Confirmed Transactions
+
+Please note that the confirmation count is currently hardcoded to `6`.
+
+### Example 
+
+#### Request
+```
+GET /transactions/confirmed'
+```
+
+#### Response
+
+```
+200 - successful call
+[
+	{
+		"from": "44fe0696beb6e24541cc0e8728276c9ec3af2675",
+		"to": "9a9f082f37270ff54c5ca4204a0e4da6951fe917",
+		"value": 25000, "fee": 10,
+		"dateCreated": "2018-02-10T17:53:48.972Z",
+		"senderPubKey": "2a1d79fb8743d0a4a8501e0028079bcf82a4f…eae1",
+		"senderSignature": ["e20c…a3c29df79f", "cf92…0acd0c2ffe56"]
+		"transactionHash": "4dfc3e0ef89ed603ed54e47435a18b836b…176a",
+		"minedInBlockIndex": 7, 
+		"paid": true // transferSuccessful
+	},
+	...
+]
+```
+
+## Retrieve Pending Transactions
+
+### Example 
+
+#### Request
+```
+GET /transactions/pending
+```
+
+#### Response
+
+```
+200 - successful call
+[
+	{
+		"from": "44fe0696beb6e24541cc0e8728276c9ec3af2675",
+		"to": "9a9f082f37270ff54c5ca4204a0e4da6951fe917",
+		"value": 25000, "fee": 10,
+		"dateCreated": "2018-02-10T17:53:48.972Z",
+		"senderPubKey": "2a1d79fb8743d0a4a8501e0028079bcf82a4f…eae1",
+		"senderSignature": ["e20c…a3c29df79f", "cf92…0acd0c2ffe56"]
+		"transactionHash": "4dfc3e0ef89ed603ed54e47435a18b836b…176a"
+	},
+	...
+]
+```
+
+## Retrieve Balance per Address
+
+Please note that the confirmation count is currently hardcoded to `6`.
+
+### Example 
+
+#### Request
+```
+GET /addresses/ac51700449340e5400e13772741c94cc9c457799/balance
+```
+
+#### Response
+
+```
+200 - successful call
+{
+    "address": "ac51700449340e5400e13772741c94cc9c457799",
+    "confirmedBalance": {
+        "confirmations": 6,
+        "balance": 15
+    },
+    "lastMinedBalance": {
+        "confirmations": 1,
+        "balance": 25
+    },
+    "pendingBalance": {
+        "confirmations": 0,
+        "balance": 20
+    }
+}
+```
+
+## Retrieve Transactions per Address
+
+### Example 
+
+#### Request
+```
+GET /addresses/ac51700449340e5400e13772741c94cc9c457799/transactions
+```
+
+#### Response
+
+```
+200 - successful call
+{
+    "address": "ac51700449340e5400e13772741c94cc9c457799",
+    "transactions": 
+    [
+		// non-pending transactions
+		{
+			"from": "44fe0696beb6e24541cc0e8728276c9ec3af2675",
+			"to": "9a9f082f37270ff54c5ca4204a0e4da6951fe917",
+			"value": 25000, "fee": 10,
+			"dateCreated": "2018-02-10T17:53:48.972Z",
+			"senderPubKey": "2a1d79fb8743d0a4a8501e0028079bcf82a4f…eae1",
+			"senderSignature": ["e20c…a3c29df79f", "cf92…0acd0c2ffe56"]
+			"transactionHash": "4dfc3e0ef89ed603ed54e47435a18b836b…176a",
+			"minedInBlockIndex": 7, 
+			"paid": true // transferSuccessful
+		},
+		...
+		// pending transactions
+		{
+			"from": "44fe0696beb6e24541cc0e8728276c9ec3af2675",
+			"to": "9a9f082f37270ff54c5ca4204a0e4da6951fe917",
+			"value": 25000, "fee": 10,
+			"dateCreated": "2018-02-10T17:53:48.972Z",
+			"senderPubKey": "2a1d79fb8743d0a4a8501e0028079bcf82a4f…eae1",
+			"senderSignature": ["e20c…a3c29df79f", "cf92…0acd0c2ffe56"]
+			"transactionHash": "4dfc3e0ef89ed603ed54e47435a18b836b…176a"
+		},
+		...
+	]
 }
 ```

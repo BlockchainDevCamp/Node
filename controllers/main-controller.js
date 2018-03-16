@@ -1,5 +1,7 @@
 const node = require('../index');
 
+const Balance = require('./address/Balance');
+
 module.exports = {
     info: (req, res) => {
         let infoObj = {
@@ -17,21 +19,5 @@ module.exports = {
         res.header("Access-Control-Allow-Origin", "*");
         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         res.send(JSON.stringify(infoObj));
-    },
-
-    getBalance: (req, res) => {
-        let address = req.body.address;
-        let confirmationNum = req.body.confirmationNum;
-        let txBalance = node.balnances[address];
-
-        let obj = {
-            "address": address,
-            "confirmedBalance": { "confirmations": confirmationNum, "balance": txBalance }
-        }
-
-        res.setHeader('Content-Type', 'application/json');
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-        res.send(JSON.stringify(obj));
-    },
+    }
 };
