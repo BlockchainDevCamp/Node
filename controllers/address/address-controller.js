@@ -5,66 +5,6 @@ const Balance = require('./Balance');
 module.exports = {
 
     getTransactionsPerAddress: (request, response) => {
-        node.blocks = [
-            {
-                index: 0,
-                transactions: [
-                    {
-                        from: "ac51700449340e5400e13772741c94cc9c457799",
-                        to: "0a37ccb342861218ea8331fdf6e4a4a6521e3e55",
-                        value: 5,
-                        paid: true,
-                        minedInBlockIndex: 0
-                    },
-                    {
-                        from: "0a37ccb342861218ea8331fdf6e4a4a6521e3e55",
-                        to: "353c42f7ca9cfcc532e9f252ffd88fcf74af8efb",
-                        value: 10,
-                        paid: true,
-                        minedInBlockIndex: 0
-                    },
-                    {
-                        from: "353c42f7ca9cfcc532e9f252ffd88fcf74af8efb",
-                        to: "ac51700449340e5400e13772741c94cc9c457799",
-                        value: 20,
-                        paid: true,
-                        minedInBlockIndex: 0
-                    }
-                ]
-            },
-            {
-                index: 1,
-                transactions: [
-                    {
-                        from: "0a37ccb342861218ea8331fdf6e4a4a6521e3e55",
-                        to: "ac51700449340e5400e13772741c94cc9c457799",
-                        value: 10,
-                        paid: true,
-                        minedInBlockIndex: 1
-                    },
-                    {
-                        from: "353c42f7ca9cfcc532e9f252ffd88fcf74af8efb",
-                        to: "ac51700449340e5400e13772741c94cc9c457799",
-                        value: 5,
-                        paid: false,
-                        minedInBlockIndex: 1
-                    }
-                ]
-            }
-        ];
-        node.pendingTransactions = [
-            {
-                from: "ac51700449340e5400e13772741c94cc9c457799",
-                to: "353c42f7ca9cfcc532e9f252ffd88fcf74af8efb",
-                value: 5
-            },
-            {
-                from: "0a37ccb342861218ea8331fdf6e4a4a6521e3e55",
-                to: "353c42f7ca9cfcc532e9f252ffd88fcf74af8efb",
-                value: 10
-            }
-        ];
-
         const address = request.params['address'];
         // TODO validate address
 
@@ -103,65 +43,6 @@ module.exports = {
     },
 
     getBalance: (req, res) => {
-        node.blocks = [
-            {
-                index: 0,
-                transactions: [
-                    {
-                        from: "ac51700449340e5400e13772741c94cc9c457799",
-                        to: "0a37ccb342861218ea8331fdf6e4a4a6521e3e55",
-                        value: 5,
-                        paid: true,
-                        minedInBlockIndex: 0
-                    },
-                    {
-                        from: "0a37ccb342861218ea8331fdf6e4a4a6521e3e55",
-                        to: "353c42f7ca9cfcc532e9f252ffd88fcf74af8efb",
-                        value: 10,
-                        paid: true,
-                        minedInBlockIndex: 0
-                    },
-                    {
-                        from: "353c42f7ca9cfcc532e9f252ffd88fcf74af8efb",
-                        to: "ac51700449340e5400e13772741c94cc9c457799",
-                        value: 20,
-                        paid: true,
-                        minedInBlockIndex: 0
-                    }
-                ]
-            },
-            {
-                index: 1,
-                transactions: [
-                    {
-                        from: "0a37ccb342861218ea8331fdf6e4a4a6521e3e55",
-                        to: "ac51700449340e5400e13772741c94cc9c457799",
-                        value: 10,
-                        paid: true,
-                        minedInBlockIndex: 1
-                    },
-                    {
-                        from: "353c42f7ca9cfcc532e9f252ffd88fcf74af8efb",
-                        to: "ac51700449340e5400e13772741c94cc9c457799",
-                        value: 5,
-                        paid: false,
-                        minedInBlockIndex: 1
-                    }
-                ]
-            }
-        ];
-        node.pendingTransactions = [
-            {
-                from: "ac51700449340e5400e13772741c94cc9c457799",
-                to: "353c42f7ca9cfcc532e9f252ffd88fcf74af8efb",
-                value: 5
-            },
-            {
-                from: "0a37ccb342861218ea8331fdf6e4a4a6521e3e55",
-                to: "353c42f7ca9cfcc532e9f252ffd88fcf74af8efb",
-                value: 10
-            }
-        ];
         const address = req.params['address'];
         // TODO validate address
 
