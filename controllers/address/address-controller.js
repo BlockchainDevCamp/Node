@@ -68,7 +68,7 @@ module.exports = {
                     if ((blocks.length - tx.minedInBlockIndex) >= requestedConfirmationNumber) {
                         confirmedBalance.includeTransaction(tx);
                     }
-                    // last minute balance
+                    // last mined balance
                     lastMinedBalance.includeTransaction(tx);
                     // pending balance
                     pendingBalance.includeTransaction(tx);

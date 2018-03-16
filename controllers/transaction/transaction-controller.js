@@ -163,6 +163,10 @@ module.exports = {
     },
 
     getConfirmedTransactions: (request, response) => {
+
+        const requestedConfirmationNumber = 6;
+        // TODO move out to a configuration file or command line parameter
+
         const transactions = [];
 
         const blocks = node.blocks;
@@ -173,7 +177,8 @@ module.exports = {
 
             for (let txIndex = 0; txIndex < block.transactions.length; txIndex++) {
                 let tx = block.transactions[txIndex];
-                if (tx.paid) {
+                // confirmed balance
+                if (tx.paid && (blocks.length - tx.minedInBlockIndex) >= requestedConfirmationNumber) {
                     transactions.push(tx);
                 }
             }
@@ -187,19 +192,6 @@ module.exports = {
 
 
     getPendingTransactions: (request, response) => {
-        node.pendingTransactions = [
-            {
-                from: "ac51700449340e5400e13772741c94cc9c457799",
-                to: "353c42f7ca9cfcc532e9f252ffd88fcf74af8efb",
-                value: 5
-            },
-            {
-                from: "0a37ccb342861218ea8331fdf6e4a4a6521e3e55",
-                to: "353c42f7ca9cfcc532e9f252ffd88fcf74af8efb",
-                value: 10
-            }
-        ];
-
         const transactions = [];
 
         for (let txIndex = 0; txIndex < node.pendingTransactions.length; txIndex++) {
