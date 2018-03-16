@@ -46,7 +46,7 @@ module.exports = {
         const address = req.params['address'];
         // TODO validate address
 
-        const requestedConfirmationNumber = 2;
+        const requestedConfirmationNumber = 6;
         // TODO move out to a configuration file or command line parameter
 
         const confirmedBalance = new Balance(address);
