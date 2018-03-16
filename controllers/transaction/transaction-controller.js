@@ -164,7 +164,7 @@ module.exports = {
         }
     },
 
-    getConfirmedTransaction: (request, response) => {
+    getConfirmedTransactions: (request, response) => {
         node.blocks = [
             {
                 index: 0,
@@ -225,12 +225,9 @@ module.exports = {
             }
         ];
 
-        const requestedConfirmationNumber = 2;
-        // TODO move out to a configuration file or command line parameter
+        const transactions = [];
 
         const blocks = node.blocks;
-
-        let transactions = [];
 
         // process confirmed confirmed balance
         for (let blockIndex = 0; blockIndex < blocks.length; blockIndex++) {
@@ -238,25 +235,16 @@ module.exports = {
 
             for (let txIndex = 0; txIndex < block.transactions.length; txIndex++) {
                 let tx = block.transactions[txIndex];
-
                 if (tx.paid) {
-                    // confirmed balance
-                    if ((blocks.length - tx.minedInBlockIndex) >= requestedConfirmationNumber) {
-                        transactions.push(tx);
-                    }
+                    transactions.push(tx);
                 }
             }
         }
 
-        let transactionsResult = {
-            address: address,
-            transactions: transactions
-        };
-
-        res.setHeader('Content-Type', 'application/json');
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-        res.send(JSON.stringify(transactionsResult));
+        response.setHeader('Content-Type', 'application/json');
+        response.header("Access-Control-Allow-Origin", "*");
+        response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        response.send(JSON.stringify(transactions));
     }
 
 };
