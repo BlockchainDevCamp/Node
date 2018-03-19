@@ -7,7 +7,6 @@ const TransactionData = require('./TransactionData');
 const TransactionHash = require('./TransactionHash');
 const Crypto = require('../../modules/Crypto');
 
-const Node = require('../../modules/Node');
 const Request = require('request');
 
 function validateTransactionRequest(request) {
@@ -81,71 +80,7 @@ module.exports = {
         }
     },
 
-    getBalance: (req, res) => {
-        const tranHash = req.params['transactionHash'];
-        const confirmationNum = req.params['confirmationNum'];
-        const blocks = node.blocks;
-
-        let tranExists = false;
-        let firstTranBlock;
-
-        for (var i = 0; i < blocks.length; i++) {
-            let transactions = blocks[i].transactions;
-            for (var t = 0; t < transactions.length; t++) {
-                if (transactions[i].transactionHash === tranHash) {
-                    firstTranBlock = true;
-                    currentBlock = blocks[i].index;
-                    break;
-                }
-            }
-        }
-
-        let confirmationNumber = blocks.length - firstTranBlock;
-        let confirmedBalance = 0;
-        let lastMinedBalance = 0;
-        for (var i = currentBlock; i < blocks.length; i++) {
-            let transactions = blocks[i].transactions;
-            for (var t = 0; t < transactions.length; t++) {
-                if (transactions[i].transactionHash === tranHash && confirmationNumber >= confirmationNum) {
-                    confirmedBalance += transactions[i].value;
-                    lastMinedBalance = transactions[i].value;
-                }
-            }
-        }
-
-        let pendingBalance = 0;
-        for (var i = 0; i < blocks.pendingTransactions.length; i++) {
-            let transactions = blocks[i].pendingTransactions;
-            for (var t = 0; t < transactions.length; t++) {
-                if (transactions[i].transactionHash === tranHash) {
-                    pendingBalance += transactions[i].value;
-                }
-            }
-        }
-
-        if (tranExists) {
-            let tran = {
-                "address": tranHash,
-                "confirmedBalance": { "confirmations": confirmationNumber, "balance": confirmedBalance },
-                "lastMinedBalance": { "confirmations": 1, "balance": lastMinedBalance },
-                "pendingBalance": { "confirmations": 0, "balance": pendingBalance }
-
-            };
-            res.setHeader('Content-Type', 'application/json');
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-            res.send(JSON.stringify(tran));
-        }
-        else {
-            res.setHeader('Content-Type', 'application/json');
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-            res.send(JSON.stringify({ "Error": "Invalid transaction hash" }));
-        }
-    },
-
     createTransaction: async (request, response) => {
-        console.log(request.debug);
         let transaction = Transaction.loadTransaction(request);
 
         // 1. Calculates the transaction hash
@@ -225,6 +160,49 @@ module.exports = {
                 }
             });
         }
+    },
+
+    getConfirmedTransactions: (request, response) => {
+
+        const requestedConfirmationNumber = 6;
+        // TODO move out to a configuration file or command line parameter
+
+        const transactions = [];
+
+        const blocks = node.blocks;
+
+        // process confirmed confirmed balance
+        for (let blockIndex = 0; blockIndex < blocks.length; blockIndex++) {
+            let block = blocks[blockIndex];
+
+            for (let txIndex = 0; txIndex < block.transactions.length; txIndex++) {
+                let tx = block.transactions[txIndex];
+                // confirmed balance
+                if (tx.paid && (blocks.length - tx.minedInBlockIndex) >= requestedConfirmationNumber) {
+                    transactions.push(tx);
+                }
+            }
+        }
+
+        response.setHeader('Content-Type', 'application/json');
+        response.header("Access-Control-Allow-Origin", "*");
+        response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        response.send(JSON.stringify(transactions));
+    },
+
+
+    getPendingTransactions: (request, response) => {
+        const transactions = [];
+
+        for (let txIndex = 0; txIndex < node.pendingTransactions.length; txIndex++) {
+            let tx = node.pendingTransactions[txIndex];
+            transactions.push(tx);
+        }
+
+        response.setHeader('Content-Type', 'application/json');
+        response.header("Access-Control-Allow-Origin", "*");
+        response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        response.send(JSON.stringify(transactions));
     }
 
 };
