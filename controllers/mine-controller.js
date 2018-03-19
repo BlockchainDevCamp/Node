@@ -55,12 +55,14 @@ module.exports = {
 
             let lastBlock = node.blocks[node.blocks.length - 1];
 
+            let blockTransactions = minerJob.transactions;
+            console.log("----- TRANSACTIONS ------");
+            console.log(blockTransactions);
+            
             let candidateBlock = new Block(index, minerJob.transactions, minerJob.difficulty, minerJob.prevBlockHash,
                 minerAddress, blockDataHash, blockHash, nonce, dateCreated);
 
             console.log(candidateBlock);
-
-            // let blockHash = hash(lastBlock.index, node.pendingTransactions.length, node.difficulty, minerJob.blockDataHash, nonce, dateCreated);
 
             let isBlockValid = await validateBlock(candidateBlock);
 
