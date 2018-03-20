@@ -5,11 +5,22 @@ const LoadInitPeers = require("./util/loadInitialPeers");
 
 let block = new Block;
 //TODO add fake pending transaction for testing
+
+let about = "SoftuniChain";
+let name =  "Alex";
+let peers = [];
+let blocks = [];
+let balances = new Map();
+let address = "";
+let pendingTransactions = [];
 let difficulty = 2;
+let miningJobs = new Map();
 
-let node = new Node("SoftuniChain", "Alex", [], [block.generageGenesisBlock()],new Map(), [], difficulty, new Map());
+let node = new Node(
+    about, name, peers, blocks, balances, address, pendingTransactions, difficulty, miningJobs
+);
 
-new LoadInitPeers().load();
+new LoadInitPeers().load(node);
 
 module.exports = node;
 
@@ -18,4 +29,6 @@ const app = require('express')();
 require('./config/express')(app);
 require('./config/routes')(app);
 app.listen(config.port);
-console.log("Listening on port: " + config.port)
+console.log("Listening on port: " + config.port);
+
+module.exports=node;
