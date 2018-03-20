@@ -1,14 +1,13 @@
 class Node {
-    constructor(about, name, peers, blocks, balnances, address, pendingTransactions, difficulty, miningJobs){
+    constructor(about, name, peers, blocks, balances, address, pendingTransactions, difficulty, miningJobs){
         this.about = about; // string
         this.name  = name; // string
         this.peers = peers; // []
         this.blocks = blocks; // []
+        this.balnances = balances; // map(address => number)
         this.address    = address; // URL of the node itself
-        this.pow = difficulty; 
-
-        this.balnances = balnances; // map(address => number)
         this.pendingTransactions = pendingTransactions; // []
+        this.pow = difficulty;
         this.difficulty = difficulty; // number
         this.miningJobs = miningJobs; // map(address => block)
     }
