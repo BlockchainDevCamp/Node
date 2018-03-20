@@ -64,6 +64,7 @@ module.exports = {
             node.blocks.push(block);
 
             calculateBlockBalances(block);
+            console.log(`The new block is sync correctly`)
 
         }
         else if (blockIndex > lastBlock.index) {
@@ -85,6 +86,7 @@ module.exports = {
 
             // calculate node.balances
             calculateBlockchainBalances();
+            console.log(`The new blockchain is sync correctly`)
         }
 
         res.setHeader('Content-Type', 'application/json');
