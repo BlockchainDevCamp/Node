@@ -32,11 +32,13 @@ module.exports = {
     },
     postNotifyBlock: async (req, res) => {
         let blockIndex = req.body.index;
-        let lastBlock = node.blocks[node.blocks.length - 1]
+        let lastBlock = node.blocks[node.blocks.length - 1];
+        let nodeAddress = req.body.nodeAddress;
 
         if (blockIndex === lastBlock.index + 1) {
             // TODO request their last block and check if its correct
-            let newBlock = await request.get(`http://{TODO}:5555/blocks/${blockIndex}`);
+            let newBlock = await request.get(`${nodeAddress}:5555/blocks/${blockIndex}`);
+            
 
             // check if block index === last block index + 1
             if (newBlock.index !== lastBlock + 1) {
@@ -65,7 +67,7 @@ module.exports = {
 
         }
         else if (blockIndex > lastBlock.index) {
-            let newBlockChain = await request.get(`http://{TODO}:5555/blocks`);
+            let newBlockChain = await request.get(`${nodeAddress}:5555/blocks`);
 
             let pow = await validateBlockChain(newBlockChain);
 
