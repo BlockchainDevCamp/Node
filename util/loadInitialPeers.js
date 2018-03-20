@@ -1,18 +1,20 @@
 const node = require("../index");
 const request = require('request');
 
+const hardCodeNodeAddress = "TODO";
+
 export default async () => {
-    let peers = request.get(`{TODO node address}/peers`);
+    let peers = await request.get(`${hardCodeNodeAddress}/peers`);
 
     if (peers > 0) {
         node.peers = peers;
         console.log(`Peers sync - ${peers.length}`)
     }
 
-    let info = request.get(`{TODO node address}/info`);
+    let info = await request.get(`${hardCodeNodeAddress}/info`);
 
     if (info.blocks > node.blocks.length) {
-        let newBlockChain = request.get(`{TODO node address}/blocks`);
+        let newBlockChain = await request.get(`${hardCodeNodeAddress}/blocks`);
         let pow = await validateBlockChain(newBlockChain);
 
         if (pow === false) {
