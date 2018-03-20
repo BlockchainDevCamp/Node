@@ -1,6 +1,7 @@
 const env = process.env.NODE_ENV || 'development';
 const Block = require('./modules/Block');
 const Node = require('./modules/Node');
+const Peer = require('./modules/Peer');
 const LoadInitPeers = require("./util/loadInitialPeers");
 
 let block = new Block;

@@ -1,4 +1,3 @@
-const node = require("../index");
 const Block = require('../modules/Block');
 const Peer = require('../modules/Peer');
 const request = require('request');
@@ -12,10 +11,7 @@ function initNode(node) {
 }
 
 class LoadInitPeers {
-
-
     async load(node) {
-
         let initialPeerUrl = process.env.INIT_PEER_URL;
         // TODO add validation
 
@@ -64,12 +60,7 @@ class LoadInitPeers {
                 }
                 remoteBlockChain = blocks;
 
-
-                let remotePoW = null;
-
-                console.log("remoteBlockChain: \n" + JSON.stringify(remoteBlockChain));
-
-                remotePoW = validateBlockChain(remoteBlockChain);
+                let remotePoW = validateBlockChain(remoteBlockChain);
 
                 if (!remotePoW || remotePoW === false) {
                     initNode(node);
@@ -88,10 +79,8 @@ class LoadInitPeers {
                 // calculate node.balances
                 calculateBlockchainBalances();
 
-                console.log(`The new blockchain is sync correctly`)
-
+                console.log(`The new blockchain is sync-ed correctly`)
             });
-
         });
     }
 }
