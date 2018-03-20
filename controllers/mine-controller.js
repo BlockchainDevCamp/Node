@@ -1,7 +1,7 @@
 const node = require('../index');
-const hash = require('hash.js');
 const Block = require('../modules/Block');
 const validateBlock = require('../util/validateBlock');
+const notifyAllPeers = require('../util/notifyAllPeers');
 const Crypto = require('../modules/Crypto');
 
 module.exports = {
@@ -66,12 +66,6 @@ module.exports = {
 
             let isBlockValid = await validateBlock(candidateBlock);
 
-            if (isBlockValid) {
-                console.log('SUCCESSSS!!!!!');
-
-            } else {
-                console.log('FAILLLLL!!');
-            }
 
             if (blockHash.startsWith("0".repeat(node.difficulty)) && index === node.blocks.length && isBlockValid) {
                 let newBlock = new Block(index, minerJob.transactions, node.difficulty, lastBlock.blockHash, minerAddress, minerJob.blockDataHash, blockHash, nonce, dateCreated);
@@ -87,6 +81,8 @@ module.exports = {
                 res.header("Access-Control-Allow-Origin", "*");
                 res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
                 res.send(JSON.stringify(responseObj));
+                console.log("New block mined.");
+                notifyAllPeers(newBlock.index);
                 return;
             }
 
@@ -97,6 +93,7 @@ module.exports = {
             res.header("Access-Control-Allow-Origin", "*");
             res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             res.send(JSON.stringify(responseObj));
+
 
         } catch (err) {
             console.error(err);

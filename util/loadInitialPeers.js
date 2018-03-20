@@ -5,6 +5,7 @@ const hardCodeNodeAddress = "TODO";
 
 class LoadInitPeers {
     async load() {
+        console.log(node.peers.length);
         let peers = await request.get(`${hardCodeNodeAddress}/peers`);
 
         if (peers > 0) {
