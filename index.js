@@ -4,7 +4,14 @@ const Node = require('./modules/Node');
 
 let block = new Block;
 //TODO add fake pending transaction for testing
-let node = new Node("SoftuniChain", "Alex", [], [block.generageGenesisBlock()],new Map(), [], 3, new Map());
+let difficulty = 2;
+
+let node = new Node("SoftuniChain", "Alex", [], [block.generageGenesisBlock()],new Map(), [], difficulty, new Map());
+
+if(node.peers.length != 0){
+    //TODO Make POST to  nodeURL/peers
+
+}
 
 module.exports = node;
 

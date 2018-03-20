@@ -1,4 +1,6 @@
 const hash = require('hash.js');
+const TransactionHash = require('../controllers/transaction/TransactionHash');
+
 
 function validateTransaction(transaction) {
     // check if transaction is successfull
@@ -7,9 +9,10 @@ function validateTransaction(transaction) {
     }
 
     // check is signature is correct TODO
+    let transactionHash = new TransactionHash(transaction);
 
     // check if transaction hash is correct
-    if (calculateTransactionHash(transaction) !== transaction.transactionHash) {
+    if (transactionHash.transactionHash !== transaction.transactionHash) {
         return false;
     }
 
@@ -18,26 +21,8 @@ function validateTransaction(transaction) {
         return false;
     }
 
-
     return true;
 
-
-    function calculateTransactionHash(transaction) {
-
-        let transactionHash = hash(
-            transaction.from,
-            transaction.to,
-            transaction.value,
-            transaction.senderPubKey,
-            transaction.senderSignature,
-            transaction.dateReceived,
-            transaction.minedInBlockIndex,
-            transaction.paid,
-            transaction.fee
-        );
-        
-        return transactionHash;
-    }
 }
 
 module.exports = validateTransaction;
