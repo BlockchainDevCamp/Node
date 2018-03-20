@@ -1,7 +1,7 @@
 const env = process.env.NODE_ENV || 'development';
 const Block = require('./modules/Block');
 const Node = require('./modules/Node');
-const loadInitialPeers = require("./util/loadInitialPeers");
+const LoadInitPeers = require("./util/loadInitialPeers");
 
 let block = new Block;
 //TODO add fake pending transaction for testing
@@ -9,7 +9,7 @@ let difficulty = 2;
 
 let node = new Node("SoftuniChain", "Alex", [], [block.generageGenesisBlock()],new Map(), [], difficulty, new Map());
 
-loadInitialPeers();
+new LoadInitPeers().load();
 
 module.exports = node;
 
