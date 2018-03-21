@@ -89,12 +89,14 @@ class LoadInitPeers {
                     })
                 };
 
+                console.log("URL: " + initialPeerUrl);
+
                 request(optionsForPostPeers, (err, res, message) => {
                     if(err) {
                         console.log(err);
                     }
 
-                    console.log(message);
+                    //console.log(message);
                 })
 
 

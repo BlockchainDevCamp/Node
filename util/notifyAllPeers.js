@@ -9,10 +9,10 @@ function notifyAllPeers(newBlockIndex) {
     for (const peer of node.peers) {
 
         let peerUrl = peer.peerUrl;
-
+        console.log("PEER URL: "+ peerUrl);
         const requestOptions = {
             method: 'POST',
-            url: peerUrl+"mine/submit",
+            url: peerUrl+"/mine/submit",
             body: {
                 nodeAddress: node.address,
                 index: newBlockIndex
@@ -21,7 +21,7 @@ function notifyAllPeers(newBlockIndex) {
         };
 
         request.post(requestOptions, function(error, response, body){
-            if (error) throw error;
+            if (error) console.error(error);
             console.log("Peer " + peer.name +" Notified.  URL--> " + peerUrl);
         });
     }
