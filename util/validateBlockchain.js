@@ -2,7 +2,7 @@ const validateBlock = require("./validateBlock");
 
 function validateBlockchain(blockchain) {
     let proofOfWork = 0; 
-
+    console.log(blockchain);
     for(const block of blockchain){
         console.log("BLOCK --> " + block);
         console.log("INDEX --> " + block.index);
@@ -37,6 +37,7 @@ function validateBlockchain(blockchain) {
 
         // validete block
         if(!validateBlock(block)){
+            console.log("Block not valid");
             return false;
         }
 

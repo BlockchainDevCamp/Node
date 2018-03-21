@@ -12,7 +12,7 @@ function notifyAllPeers(newBlockIndex) {
         console.log("PEER URL: "+ peerUrl);
         const requestOptions = {
             method: 'POST',
-            url: peerUrl+"/mine/submit",
+            url: peerUrl+"/blocks/notify",
             body: {
                 nodeAddress: node.address,
                 index: newBlockIndex

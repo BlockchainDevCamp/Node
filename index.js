@@ -4,6 +4,9 @@ const Node = require('./modules/Node');
 const Peer = require('./modules/Peer');
 const LoadInitPeers = require("./util/loadInitialPeers");
 
+const config = require('./config/config')[env];
+const app = require('express')();
+
 let block = new Block;
 //TODO add fake pending transaction for testing
 
@@ -12,7 +15,7 @@ let name =  "Alex";
 let peers = [];
 let blocks = [];
 let balances = new Map();
-let address = "";
+let address = "http://localhost:"+config.port;
 let pendingTransactions = [];
 let difficulty = 3;
 let miningJobs = new Map();
@@ -25,8 +28,7 @@ new LoadInitPeers().load(node);
 
 module.exports = node;
 
-const config = require('./config/config')[env];
-const app = require('express')();
+
 require('./config/express')(app);
 require('./config/routes')(app);
 app.listen(config.port);

@@ -13,12 +13,12 @@ module.exports = {
     // post request with 2 parameters (name,url)
     postPeers: (req, res) => {
 
-        var peerUrl = req.query.url;
+        var peerUrl     = req.body.url;
 
         if (urlValidator(peerUrl)) {
 
             // TODO: could add funcitonality to check if 'peerName' and  'peerUrl' are unique per Node
-            var peerName = req.query.name;
+            var peerName    = req.body.name;
 
             peer = new Peer(peerName, peerUrl);
 
@@ -30,6 +30,9 @@ module.exports = {
                 message: 'Peer has been added',
                 peers: Node.peers
             });
+
+            console.log("New Peer Added: ");
+            console.log(peer);
 
         } else {
             res.setHeader('Content-Type', 'application/json');
@@ -43,5 +46,7 @@ module.exports = {
 
 // method for validating URL format
 function urlValidator(ip) {
-    return ipRegex({ exact: true }).test(ip)
+    //TODO uncomment when not working with localhost
+   // return ipRegex({ exact: true }).test(ip)
+    return true;
 }

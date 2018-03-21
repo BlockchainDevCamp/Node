@@ -18,6 +18,7 @@ class LoadInitPeers {
         // TODO add validation
 
         if (!initialPeerUrl) {
+            console.log("No Peer");
             initNode(node);
             return;
         }
@@ -35,15 +36,14 @@ class LoadInitPeers {
             }
             console.log("remotePeersList > " + JSON.stringify(remotePeersList));
 
-
-            if (remotePeersList.length > 0) {
-                node.peers = remotePeersList;
+            if(remotePeersList) {
+                if (remotePeersList.length > 0) {
+                    node.peers = remotePeersList;
+                }
             }
 
             let initialPeer = new Peer(initialPeerUrl, initialPeerUrl);
             node.peers.push(initialPeer);
-
-            // TODO notify initialPeer for our existence
 
 
             let remoteBlockChain = null;
@@ -59,6 +59,8 @@ class LoadInitPeers {
                     initNode(node);
                     return;
                 }
+                console.log("PEERURL: " + initialPeerUrl+ '/blocks');
+                console.log("REQUEST ----> " + blocks);
                 remoteBlockChain = blocks;
 
                 let remotePoW = validateBlockChain(remoteBlockChain);
@@ -69,7 +71,8 @@ class LoadInitPeers {
                     return;
                 }
 
-                if (remotePoW <= node.pow) {
+                if (remotePoW <= node.pow && remoteBlockChain > 0) {
+                    console.log("Remote POW not valid");
                     initNode(node);
                     return;
                 }
@@ -83,19 +86,18 @@ class LoadInitPeers {
                     method: 'post',
                     json: true,
                     url: initialPeerUrl + '/peers',
-                    body: JSON.stringify({
+                    body: {
                         url: node.address,
                         name: node.name
-                    })
+                    }
                 };
-
-                console.log("URL: " + initialPeerUrl);
 
                 request(optionsForPostPeers, (err, res, message) => {
                     if(err) {
                         console.log(err);
                     }
-
+                    console.log("PEER POST SENT");
+                    console.log(optionsForPostPeers);
                     //console.log(message);
                 })
 
