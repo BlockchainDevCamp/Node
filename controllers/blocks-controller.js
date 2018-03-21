@@ -35,11 +35,14 @@ module.exports = {
         let lastBlock = node.blocks[node.blocks.length - 1];
         let nodeAddress = req.body.nodeAddress;
 
+        console.log("${nodeAddress}blocks/${blockIndex} -> " + `${nodeAddress}/blocks/${blockIndex}`);
+
         if (blockIndex === lastBlock.index + 1) {
+
             let options = {
                 method: 'get',
                 json: true,
-                url: `${nodeAddress}blocks/${blockIndex}`,
+                url: `${nodeAddress}/blocks/${blockIndex}`,
             };
 
             request(options, (err, res, newBlock) => {
@@ -48,8 +51,10 @@ module.exports = {
                     return;
                 }
 
+                console.log("After first if: " + JSON.stringify(newBlock));
+
                 // check if block index === last block index + 1
-                if (newBlock.index !== lastBlock + 1) {
+                if (newBlock.index !== lastBlock.index + 1) {
                     return false;
                 }
 
@@ -58,10 +63,11 @@ module.exports = {
                     return false; // TODO request full blockchain ...
                 }
 
-                // check if block creation is greater then prev block creation
-                if (newBlock.dateCreated >= lastBlock.dateCreated) {
-                    return false;
-                }
+                // TODO enable that check
+                // // check if block creation is greater then prev block creation
+                // if (newBlock.dateCreated < lastBlock.dateCreated) {
+                //     return false;
+                // }
 
                 // validete block
                 let isBlockValid = validateBlock(newBlock)
@@ -69,14 +75,12 @@ module.exports = {
                     return false;
                 }
 
-                node.blocks.push(block);
+                node.blocks.push(newBlock);
 
-                calculateBlockBalances(block);
+                calculateBlockBalances(newBlock);
                 console.log(`The new block is sync correctly`)
 
             });
-
-
 
         }
         else if (blockIndex > lastBlock.index) {
