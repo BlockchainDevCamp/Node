@@ -3,6 +3,7 @@ const Block = require('../modules/Block');
 const validateBlock = require('../util/validateBlock');
 const notifyAllPeers = require('../util/notifyAllPeers');
 const Crypto = require('../modules/Crypto');
+const calculateBlockchainBalances = require('../util/calculateBlockchainBalances');
 
 module.exports = {
     startMine: (req, res) => {
@@ -71,6 +72,10 @@ module.exports = {
                 let newBlock = new Block(index, minerJob.transactions, node.difficulty, lastBlock.blockHash, minerAddress, minerJob.blockDataHash, blockHash, nonce, dateCreated);
 
                 node.blocks.push(newBlock);
+
+                // calculateBlockchainBalances(node);
+
+                node.pendingTransactions = [];
 
                 let responseObj = {
                     "status": "accepted",
