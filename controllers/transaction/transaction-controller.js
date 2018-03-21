@@ -109,8 +109,18 @@ module.exports = {
         }
 
         // 2. Checks for collisions -> duplicated transactions are skipped
-        let existingTransaction = node.pendingTransactions[transactionHash];
-        if (existingTransaction !== undefined) {
+        let isExisting = false;
+        for (let txIndex = 0; txIndex < node.pendingTransactions.length; txIndex++) {
+            let tx = node.pendingTransactions[txIndex];
+            let txHash = new TransactionHash(tx).transactionHash;
+            if (txHash === transactionHash.transactionHash) {
+                isExisting = true;
+                break;
+            }
+        }
+
+        // if (existingTransaction !== undefined) {
+        if (isExisting) {
             response.status(409);
             response.set('Content-Type', 'application/json');
             response.send(JSON.stringify({"Error": "Transaction already exists."}));
@@ -142,12 +152,14 @@ module.exports = {
         for (let peerIndex = 0; peerIndex < node.peers.length; peerIndex++) {
             let peer = node.peers[peerIndex];
 
+            // console.log("$$$$$$ transactionData: " + JSON.stringify(transactionData));
+
             let options = {
                 method: 'post',
-                body: transactionData,
+                body: transaction,
                 json: true,
                 // TODO: move to configuration
-                url: peer.peerUrl + ":5555/transactions",
+                url: peer.peerUrl + "/transactions",
             };
 
             await Request(options, function (err, res, transactionHashBody) {
