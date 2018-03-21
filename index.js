@@ -14,7 +14,7 @@ let blocks = [];
 let balances = new Map();
 let address = "";
 let pendingTransactions = [];
-let difficulty = 2;
+let difficulty = 3;
 let miningJobs = new Map();
 
 let node = new Node(
