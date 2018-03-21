@@ -36,57 +36,80 @@ module.exports = {
         let nodeAddress = req.body.nodeAddress;
 
         if (blockIndex === lastBlock.index + 1) {
-            // TODO request their last block and check if its correct
-            let newBlock = await request.get(`${nodeAddress}:5555/blocks/${blockIndex}`);
-            
+            let options = {
+                method: 'get',
+                json: true,
+                url: `${nodeAddress}blocks/${blockIndex}`,
+            };
 
-            // check if block index === last block index + 1
-            if (newBlock.index !== lastBlock + 1) {
-                return false;
-            }
+            request(options, (err, res, newBlock) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
 
-            // check if prevblockhash is correct
-            if (newBlock.prevBlockHash !== lastBlock.blockHash) {
-                return false; // TODO request full blockchain ...
-            }
+                // check if block index === last block index + 1
+                if (newBlock.index !== lastBlock + 1) {
+                    return false;
+                }
 
-            // check if block creation is greater then prev block creation
-            if (newBlock.dateCreated >= lastBlock.dateCreated) {
-                return false;
-            }
+                // check if prevblockhash is correct
+                if (newBlock.prevBlockHash !== lastBlock.blockHash) {
+                    return false; // TODO request full blockchain ...
+                }
 
-            // validete block
-            let isBlockValid = await validateBlock(newBlock)
-            if (!isBlockValid) {
-                return false;
-            }
+                // check if block creation is greater then prev block creation
+                if (newBlock.dateCreated >= lastBlock.dateCreated) {
+                    return false;
+                }
 
-            node.blocks.push(block);
+                // validete block
+                let isBlockValid = validateBlock(newBlock)
+                if (!isBlockValid) {
+                    return false;
+                }
 
-            calculateBlockBalances(block);
-            console.log(`The new block is sync correctly`)
+                node.blocks.push(block);
+
+                calculateBlockBalances(block);
+                console.log(`The new block is sync correctly`)
+
+            });
+
+
 
         }
         else if (blockIndex > lastBlock.index) {
-            let newBlockChain = await request.get(`${nodeAddress}:5555/blocks`);
+            let options = {
+                method: 'get',
+                json: true,
+                url: `${nodeAddress}blocks`,
+            };
 
-            let pow = await validateBlockChain(newBlockChain);
+            request(options, (err, res, newBlockChain) => {
+                if (err) {
+                    console.log(err);
+                    return
+                }
 
-            if (pow === false) {
-                return false;
-            }
+                let pow = validateBlockChain(newBlockChain);
 
-            if (pow <= node.pow) {
-                return false;
-            }
+                if (pow === false) {
+                    return false;
+                }
 
-            node.blocks = newBlockChain;
-            node.balnances = new Map();
-            node.pendingTransactions = [];
+                if (pow <= node.pow) {
+                    return false;
+                }
 
-            // calculate node.balances
-            calculateBlockchainBalances();
-            console.log(`The new blockchain is sync correctly`)
+                node.blocks = newBlockChain;
+                node.balnances = new Map();
+                node.pendingTransactions = [];
+
+                // calculate node.balances
+                calculateBlockchainBalances();
+                console.log(`The new blockchain is sync correctly`)
+            });
         }
 
         res.setHeader('Content-Type', 'application/json');
