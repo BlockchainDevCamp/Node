@@ -20,7 +20,7 @@ function notifyAllPeers(newBlockIndex) {
             json: true
         };
 
-        request.post(requestOptions, function(error, response, body){
+        request.post(requestOptions, function(response,error){
             if (error) console.error(error);
             console.log("Peer " + peer.name +" Notified.  URL--> " + peerUrl);
         });
