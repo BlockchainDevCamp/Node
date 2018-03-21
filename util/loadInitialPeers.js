@@ -5,6 +5,7 @@ const validateBlockChain = require('./validateBlockChain');
 const calculateBlockchainBalances = require('./calculateBlockchainBalances');
 
 function initNode(node) {
+    console.log("Initializing the new BlockChain");
     let genesisBlock = new Block().generageGenesisBlock();
     node.blocks.push(genesisBlock);
     node.peers = [];
@@ -54,7 +55,6 @@ class LoadInitPeers {
             request(options, function (err, responze, blocks) {
                 if (err) {
                     console.error(err);
-
                     initNode(node);
                     return;
                 }
@@ -63,6 +63,7 @@ class LoadInitPeers {
                 let remotePoW = validateBlockChain(remoteBlockChain);
 
                 if (!remotePoW || remotePoW === false) {
+                    console.log("Remote POW: " + remotePoW)
                     initNode(node);
                     return;
                 }
@@ -76,8 +77,10 @@ class LoadInitPeers {
                 node.balnances = new Map();
                 node.pendingTransactions = [];
 
+                //TODO make a POST request to the PEER with the nodeAddress
+
                 // calculate node.balances
-                calculateBlockchainBalances();
+                calculateBlockchainBalances(node);
 
                 console.log(`The new blockchain is sync-ed correctly`)
             });

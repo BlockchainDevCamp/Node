@@ -11,7 +11,6 @@ function notifyAllPeers(newBlockIndex) {
         let peerUrl = peer.peerUrl;
 
         const requestOptions = {
-            headers: {'content-type' : 'application/x-www-form-urlencoded'},
             method: 'POST',
             url: peerUrl+"mine/submit",
             body: {

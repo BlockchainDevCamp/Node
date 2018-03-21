@@ -3,22 +3,26 @@ const TransactionHash = require('../controllers/transaction/TransactionHash');
 
 
 function validateTransaction(transaction) {
-    // check if transaction is successfull
-    if (transaction.paid === false) {
-        return true;
-    }
 
-    // check is signature is correct TODO
-    let transactionHash = new TransactionHash(transaction);
+    if (transaction.minedInBlockIndex > 0) {
 
-    // check if transaction hash is correct
-    if (transactionHash.transactionHash !== transaction.transactionHash) {
-        return false;
-    }
+        // check if transaction is successfull
+        if (transaction.paid === false) {
+            return true;
+        }
 
-    // check if from address has enough money to send
-    if (node.balnances.get(transaction.from) < transaction.fee + transaction.value) {
-        return false;
+        // check is signature is correct TODO
+        let transactionHash = new TransactionHash(transaction);
+
+        // check if transaction hash is correct
+        if (transactionHash.transactionHash !== transaction.transactionHash) {
+            return false;
+        }
+
+        // check if from address has enough money to send
+        if (node.balnances.get(transaction.from) < transaction.fee + transaction.value) {
+            return false;
+        }
     }
 
     return true;

@@ -1,11 +1,13 @@
 const node = require("../index");
 
 function calculateBlockBalances(block) {
-
-    for (const transaction of block.transactions) {
-        if (transactions.pain === true) {
-            node.balnances[transaction.form] -= transaction.value + transaction.fee;
-            node.balnances[transaction.to] += transaction.value;
+    if(block.transactions.length > 0) {
+        for (const transaction of block.transactions) {
+            if (transaction.paid === true) {
+                console.log("transaction is paid");
+                node.balnances[transaction.form] -= transaction.value + transaction.fee;
+                node.balnances[transaction.to] += transaction.value;
+            }
         }
     }
 
