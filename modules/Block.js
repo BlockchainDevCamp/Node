@@ -25,14 +25,21 @@ class Block {
     generageGenesisBlock() {
         let genesisBlock = new Block(
             0,
-            [],
+            [{
+                from: '0000000000000000000000000000000000000000',
+                to: '9cb729548b18dd625aa5a52769844e2ed915da42',
+                value: 1000000000,
+                fee: 0,
+                dateCreated: '2018-01-29T00:00:00.000Z',
+                transactionHash: '6b20cf805996fe707393964cc1dbc1a147eb63d5b066ed93f98e38fa790f332b'
+            }],
             5,
             "0000000000000000000000000000000000000000000000000000000000000000",
-            "18pF4dNsxjT2EAXToobbisg2MjKc2cSoWW",
-            "56b1bcd43cfec5f54b32d4166d09acaa5a2a3afd7007262b11fe8da86b5a827c",
-            1859140553,
-            new Date("2018-12-17"),
-            "00000000000000000038eb8467d006870364a46b7d3ad6f341a4aa41745d125c"
+            "0000000000000000000000000000000000000000",
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "000b474375742fb641f211a06715cc08ebe4c1563f2ca35983dc9fc0d2a88c93",
+            2837614067,
+            "2018-03-21T00:01:37.883Z",
         );
 
         return genesisBlock;

@@ -27,7 +27,7 @@ function validateBlock(candidateBlock) {
 
     // check if all transaction are valid (if there is transactions at all)
     if(candidateBlock.transactions.length > 0) {
-        if (!validateAllTransactions(candidateBlock.transactions)) {
+        if (!validateAllTransactions(candidateBlock)) {
             console.log("transactions not valid");
             return false
         }
