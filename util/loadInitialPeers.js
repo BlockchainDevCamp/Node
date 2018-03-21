@@ -3,6 +3,7 @@ const Peer = require('../modules/Peer');
 const request = require('request');
 const validateBlockChain = require('./validateBlockChain');
 const calculateBlockchainBalances = require('./calculateBlockchainBalances');
+const node = require("../index");
 
 function initNode(node) {
     console.log("Initializing the new BlockChain");
@@ -78,6 +79,25 @@ class LoadInitPeers {
                 node.pendingTransactions = [];
 
                 //TODO make a POST request to the PEER with the nodeAddress
+                let optionsForPostPeers = {
+                    method: 'post',
+                    json: true,
+                    url: initialPeerUrl + '/peers',
+                    body: JSON.stringify({
+                        url: node.address,
+                        name: node.name
+                    })
+                };
+
+                request(optionsForPostPeers, (err, res, message) => {
+                    if(err) {
+                        console.log(err);
+                    }
+
+                    console.log(message);
+                })
+
+
 
                 // calculate node.balances
                 calculateBlockchainBalances(node);
